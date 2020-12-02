@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>RemeBook - Простая записная книжка</title>
+        <script src="https://unpkg.com/vue@next"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <link rel="shortcut icon" href="favicon.png" type="image/png">
+        <link rel="stylesheet" type="text/css" href="css/dev.css"></link>
+        <script
+            src="https://code.jquery.com/jquery-3.5.1.min.js"
+            integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+            crossorigin="anonymous">
+        </script>
+    </head>
+    <body>
+        <div id="app">
+
+            <div id="topBlock">
+                <img id="logo" src="imgs/logo.svg" />
+                <div id="searchBlock">
+                    <input id="searchInput" v-model="searchStr" @input="search">
+                    <button v-if="!clearSearch" id="searchButton"></button>
+                    <button v-if="clearSearch" id="clearSearchButton" @click="toClearSearch"></button>
+                </div>
+            </div>
+
+            <div id="leftMenu">
+
+                <menu-item
+                    v-for="(menuItem,index) of menu"
+                    v-show="editMenuItemName != menuItem.id" 
+                    :key="menuItem.id" 
+                    :id="menuItem.id" 
+                    :name="menuItem.name" 
+                    :active="menuItem.id == activeMenuItem ? true : false"
+                    :edit_menu_item_name="editMenuItemName"
+                    @change_book="changeBook"
+                    @click.right.prevent="showContextMenuForMenuItem"
+                ></menu-item>
+
+                <input
+                    v-for="(menuItem,index) of menu"
+                    :id="'editMenuItem_' + menuItem.id" 
+                    class="editMenuItemInputs" 
+                    v-show="editMenuItemName === menuItem.id"
+                    :value="menuItem.name"
+                    @blur="editMenuItemName = -1"
+                    @keyup.enter="renameMenuItem({id: menuItem.id, finally: true, new_name: $event.target.value})">
+
+                <div v-show="!toTextNewBook" id="addNewBookButton" @click="showInputForNewBook">
+                    <div id="anbb_icon"></div>
+                    <span>Создать книгу</span>
+                </div>
+
+                <input v-show="toTextNewBook" id="newBookInput" v-model="newBookName" @keyup.enter="createNewBook" @blur="toTextNewBook = false">
+
+            </div>
+
+            <div id="newRecordTopBlock">
+                <button id="addNewRecordButton" @click="editRecord({actionType: 'create', finally: false})"></button>
+            </div>
+
+            <div id="contentBlock">
+
+                <empty-block v-if="searchEmpty" button_name="Создать запись" @create_record="editRecord({actionType: 'create', finally: false})">
+                    Сейчас нет ни одной записи, удовлетворяющей поисковому запросу.<br>
+                    <strong>Создать такую запись?</strong>
+                </empty-block>
+
+                <div id="bookItemsBlock">
+                    <item-block
+                        v-if="!clearSearch" 
+                        v-for="item of items"
+                        :id="item.id"
+                        :name="item.name"
+                        :content="item.content"
+                        :key="item.id"
+                        @click="showFullContent(item.id)"
+                        @click.right.prevent="showContextMenuForRecordItem($event,$event.target.id)"
+                    ></item-block>
+
+                    <item-block
+                        v-else 
+                        v-for="f_item of filtredItems"
+                        :id="f_item.id"
+                        :name="f_item.name"
+                        :content="f_item.content"
+                        :key="f_item.id"
+                        @click="showFullContent(f_item.id)"
+                        @click.right.prevent="showContextMenuForRecordItem($event,$event.target.id)"
+                    ></item-block>
+                </div>
+
+            </div>
+
+            <!-- Context menu for menu items -->
+            <context-menu 
+                v-show="contextMenu.show"
+                :data="contextMenu"
+                menu_item_name="Переименовать"
+                @mouseleave="contextMenu.show = false"
+                @delete_item="deleteMenuItem"
+                @edit_item="renameMenuItem">
+            </context-menu>
+
+            <!-- Context menu for records -->
+            <context-menu 
+                v-show="contextMenu2.show"
+                :data="contextMenu2"
+                menu_item_name="Редактировать"
+                @mouseleave="contextMenu2.show = false"
+                @delete_item="deleteRecord"
+                @edit_item="editRecord">
+            </context-menu>
+
+            <alert-window 
+                v-if="alertWindowShow"
+                header="книги"
+                question="книгу"
+                :name="contextMenu.name"
+                :id="contextMenu.id"
+                @close_window="alertWindowShow = false"
+                @finally_delete="deleteMenuItem">
+            </alert-window>
+
+            <edit-record-window
+                v-if="editWindowShow"
+                :action_type="editRecordState.actionType"
+                :book="editRecordState.book"
+                :type_header="editRecordState.headerName"
+                :type_button="editRecordState.buttonName"
+                :header="editRecordState.header"
+                :text="editRecordState.text"
+                @close_window="editWindowShow = false"
+                @input_header="editRecordState.header = $event"
+                @input_text="editRecordState.text = $event"
+                @edit_record="editRecord">
+            </edit-record-window>
+
+            <alert-window 
+                v-if="alertWindow2Show"
+                header="записи"
+                question="запись"
+                :name="contextMenu2.name"
+                :id="contextMenu2.id"
+                @close_window="alertWindow2Show = false"
+                @finally_delete="deleteRecord">
+            </alert-window>
+
+        </div>
+    </body>
+    <script>
+        const model = {
+            data() {
+                return {
+                    menu: [],
+                    items: [],
+                    filtredItems: [],
+                    searchStr : '',
+                    clearSearch: false,
+                    activeMenuItem: -1,
+                    toTextNewBook: false,
+                    newBookName: "",
+                    contextMenu: { show: false, id: -1, x: 0, y: 0, name: "", position: 0 },
+                    alertWindowShow: false,
+                    editMenuItemName: -1,
+                    editRecordState: { id: -1, actionType: "", book: "", bookId: -1, buttonName: "", headerName: "", header: "", text: "" },
+                    editWindowShow: false,
+                    contextMenu2: { show: false, id: -1, x: 0, y: 0, name: "" },
+                    alertWindow2Show: false,
+                    searchEmpty: false
+                }
+            },
+
+            created() {
+                this.updateApp("first");
+            },
+
+            methods: {
+                getApi(url,el,doAfter) {
+                    axios.get(url)
+                        .then((response) => {
+                            let d = response.data
+                            switch (el) {
+                                case 'menu': this.menu = d; break;
+                                case 'list': this.items = d; break;
+                                case 'addbook':  d === true ? this.updateApp("last") : alert(d); break;
+                                case 'deletebook': d === true ? this.updateApp("current") : alert(d); break;
+                                case 'renamebook': d === true ? this.updateApp("notset") : alert(d); break;
+                                case 'addrecord': d !== true ? alert(d) : false; break;
+                                case 'deleterecord': d !== true ? alert(d) : false; break;
+                                case 'editrecord': d !== true ? alert(d) : false; break;
+                            }
+                            doAfter();
+                        })
+                },
+
+                search() {
+                    this.clearSearch = true;
+                    const full = this.items;
+                    const str = this.searchStr;
+                    this.searchEmpty = false;
+
+                    this.filtredItems = [];
+
+                    full.forEach(item => {
+                        item.name.toLowerCase().indexOf(str.toLowerCase()) >= 0 ? inName = true : inName = false;
+                        item.content.toLowerCase().indexOf(str.toLowerCase()) >= 0 ? inContent = true : inContent = false; 
+                        if (inName || inContent) {
+                            this.filtredItems[this.filtredItems.length] = item;
+                        }
+                    });
+
+                    if (this.filtredItems.length === 0)
+                        this.searchEmpty = true;
+                },
+
+                toClearSearch() {
+                    this.searchEmpty = false;
+                    this.searchStr = '';
+                    this.clearSearch = false;
+                },
+
+                showFullContent(id) {
+                    if ($("#item_" + id).css('height') === '76px')
+                        $("#item_" + id).css('height', 'auto').find(".item_shadow_blocks").css('display','none')
+                    else
+                        $("#item_" + id).css('height', '76px').find(".item_shadow_blocks").css('display','block');
+                },
+
+                changeBook(bookId) {
+                    this.toClearSearch();
+                    const m = this;
+                    this.getApi('http://arthurburavljov.ru/api/remebook/getlist/?book='+bookId, 'list', () => {
+                        m.activeMenuItem = bookId;
+                    });
+                },
+
+                showInputForNewBook() {
+                    this.toTextNewBook = true;
+                    this.editMenuItemName = -1;
+                    $("#newBookInput").show().focus();
+
+                },
+
+                createNewBook() {
+                    if (this.newBookName.length) {
+                        this.getApi('http://arthurburavljov.ru/api/remebook/addbook/?name='+this.newBookName, 'addbook', () => {
+                            this.toTextNewBook = false;
+                            this.newBookName = "";
+                        });
+                    }
+                    else {
+                        alert("Вы не указали название новой книжки");
+                    }
+                },
+
+                updateApp(selectedItem){
+                    const m = this;
+                    m.getApi('http://arthurburavljov.ru/api/remebook/getmenu/', 'menu', function() {
+                        if (selectedItem === "first")
+                            m.activeMenuItem = m.menu[0].id
+                        else if (selectedItem === "last") {
+                            m.toClearSearch();
+                            m.activeMenuItem = m.menu[m.menu.length-1].id;
+                        }
+                        else if (selectedItem === "current") {
+                            if (m.contextMenu.id === m.activeMenuItem) { 
+                                m.toClearSearch();
+                                m.activeMenuItem = m.menu[0].id;
+                            }
+                            m.contextMenu = { show: false, id: -1, x: 0, y: 0, name: "", position: 0 };
+                        }
+                        m.getApi('http://arthurburavljov.ru/api/remebook/getlist/?book='+m.activeMenuItem, 'list', () => {
+                            selectedItem === "last" ? m.editRecord({actionType: "create", finally: false}) : false;
+                        });
+                    });
+                },
+
+                showContextMenuForMenuItem(event) {
+                    const menuItemId = event.target.parentElement.id;
+                    const id = menuItemId.slice(menuItemId.indexOf("_") + 1, menuItemId.length);
+                    this.contextMenu = {
+                        show: true,
+                        x: (event.clientX-12) +"px",
+                        y: (event.clientY-12) + "px",
+                        id: id,
+                        position: this.contextMenu.position,
+                        name: this.contextMenu.name
+                    }
+                },
+
+                showContextMenuForRecordItem(event,id) {
+                    if (id.length === 0) {
+                        const recordItemId = event.target.parentElement.id;
+                        id = recordItemId.slice(recordItemId.indexOf("_") + 1, recordItemId.length);
+
+                    }
+                    else {
+                        id = id.slice(id.indexOf("_") + 1, id.length);
+                    }
+                    
+                    if (id.length > 0) {
+                        let recordName;
+                        this.items.forEach(item => {
+                            item.id === id ? recordName = item.name : false; 
+                        });
+
+                        this.contextMenu2 = {
+                            show: true,
+                            x: (event.clientX-12) +"px",
+                            y: (event.clientY-12) + "px",
+                            id: id,
+                            name: recordName
+                        };
+                    }
+                },
+
+                deleteMenuItem(data) {
+                    if (!data.finally) {
+                        this.contextMenu.show = false;
+                        this.menu.forEach((item, index) => {
+                            if (item.id === data.id) {
+                                this.contextMenu.name = item.name;
+                                this.contextMenu.position = index;
+                                this.editWindowShow = false;
+                                this.alertWindowShow = true;
+                            }
+                        });
+                    }
+                    else {
+                        this.alertWindowShow = false;
+                        this.getApi('http://arthurburavljov.ru/api/remebook/deletebook/?id='+data.id, 'deletebook', () => {return false});
+                    }
+                },
+
+                renameMenuItem(data) {
+                    if (!data.finally) { 
+                        this.contextMenu.show = false;
+                        this.toTextNewBook = false;
+                        this.editMenuItemName = data.id;
+                        const el = '#editMenuItem_' + data.id;
+                        $(el).insertBefore('#menuItem_' + data.id).show().focus();
+                    }
+                    else {
+                        if (data.new_name.length > 0) {
+                            this.editMenuItemName = -1;
+                            this.getApi('http://arthurburavljov.ru/api/remebook/renamebook/?id='+data.id+'&new_name='+data.new_name, 'renamebook', () => {return false});
+                        }
+                        else {
+                            alert("Вы не указали название книги");
+                        }
+                    }
+                },
+
+                editRecord(data) {
+                    if (data.hasOwnProperty('actionType') && data.actionType === 'create' && !data.finally) {
+                            let bookName;
+                            this.menu.forEach(item => {
+                                item.id === this.activeMenuItem ? bookName = item.name : false;
+                            });
+                            this.editRecordState = {
+                                id: -1,
+                                actionType: "create",
+                                book: bookName,
+                                bookId: this.activeMenuItem,
+                                buttonName: "Добавить запись",
+                                headerName: "Новая запись",
+                                header: "",
+                                text: ""
+                            };
+                        this.alertWindowShow = false;
+                        this.alertWindow2Show = false;
+                        this.editWindowShow = true;
+                        setTimeout("$('#editRecordInput').focus()",200);
+                    }
+                    else if (data.hasOwnProperty('actionType') && data.actionType === 'create' && data.finally) {
+                        const d = this.editRecordState;
+                        if (d.header.length > 0 && d.text.length > 0) {
+                            this.editWindowShow = false;
+                            d.text = d.text.replace(/\n/g, "<br/>");
+                            const chColorStart = color => {
+                                $('#bookItemsBlock .items').eq(0).css({'background': color});
+                            }
+                            this.getApi('http://arthurburavljov.ru/api/remebook/addrecord/?book_id=' + d.bookId + '&name=' + d.header + '&content=' + d.text, 
+                                        'addrecord', 
+                                        () => {
+                                            this.getApi('http://arthurburavljov.ru/api/remebook/getlist/?book='+this.activeMenuItem, 'list', () => {
+                                                this.toClearSearch();
+                                                setTimeout(chColorStart,500,'#eeeeee');
+                                                setTimeout(chColorStart,1000,'#fafafa');
+                                            });
+                                        });
+                        }
+                        else {
+                            alert("Укажите заголовок и содержание записи");
+                        }
+                    }
+                    else if (!data.hasOwnProperty('actionType') && !data.finally) {
+                        this.contextMenu2.show = false;
+                        let bookName, header, text;
+                        this.menu.forEach(item => {
+                            item.id === this.activeMenuItem ? bookName = item.name : false;
+                        });
+                        this.items.forEach(item => {
+                            if (item.id === data.id) {
+                                header = item.name;
+                                text = item.content;
+                            }
+                        })
+                        this.editRecordState = {
+                            id: data.id,
+                            actionType: "edit",
+                            book: bookName,
+                            bookId: this.activeMenuItem,
+                            buttonName: "Изменить запись",
+                            headerName: header,
+                            header: header,
+                            text: text.replaceAll("<br/>", "\n")
+                        };
+                        this.editWindowShow = true;
+                        this.alertWindowShow = false;
+                        this.alertWindow2Show = false;
+                    }
+                    else if (data.hasOwnProperty('actionType') && data.actionType === 'edit' && data.finally) {
+                        const d = this.editRecordState;
+                        if (d.header.length > 0 && d.text.length > 0) {
+                            this.editWindowShow = false;
+                            d.text = d.text.replaceAll("\n", "<br/>");
+                            this.getApi("http://arthurburavljov.ru/api/remebook/editrecord/?id=" + d.id + "&name=" + d.header + "&content=" + d.text, 
+                            'editrecord', 
+                            () => {
+                                this.getApi('http://arthurburavljov.ru/api/remebook/getlist/?book='+this.activeMenuItem, 'list', () => {
+                                    this.search();
+                                });
+                            });
+                        }
+                        else {
+                            alert("Укажите заголовок и содержание записи");
+                        }
+                    }
+                },
+
+                deleteRecord(data) {
+                    if (!data.finally) {
+                        this.contextMenu2.show = false;
+                        this.editWindowShow = false;
+                        this.alertWindow2Show = true;
+                    }
+                    else {
+                        this.alertWindow2Show = false;
+                        this.getApi("http://arthurburavljov.ru/api/remebook/deleterecord/?id=" + data.id, 'deleterecord', () => {
+                            this.getApi('http://arthurburavljov.ru/api/remebook/getlist/?book='+this.activeMenuItem, 'list', () => {
+                                this.search();
+                            });
+                        });
+                    }
+                }
+            }
+        };
+
+        const app = Vue.createApp(model);
+
+        app.component("menu-item", {
+            props: ['id','name','active','show_context_menu'],
+            template: `<div :id="'menuItem_'+id" class="menuItems" :class="{active: active}" @click="$emit('change_book', id)">
+                            <div id="activeMenuItemsDot" v-if="active"></div>
+                            <span >{{ name }}</span>
+                      </div>`
+        });
+
+        app.component("context-menu", {
+            props: ["data","menu_item_name"],
+            template: `<div id="contextMenuForMenuItems" :style="{left: data.x, top: data.y}">
+                            <button @click="$emit('edit_item', {id: data.id, finally: false})">{{ menu_item_name }}</button>
+                            <button @click="$emit('delete_item', {id: data.id, finally: false})">Удалить</button>
+                       </div>`
+        });
+
+        app.component("item-block", {
+            props: ['id','name','content'],
+            template: `<div :id="'item_' + id" class="items">
+                        <div class="item_headers"> {{ name }} </div>
+                        <div class="item_contents" v-html="content"></div>
+                        <div class="item_shadow_blocks" v-if="content.length > 190 || content.split('<br/>').length > 3">
+                            <button class="item_full_content_buttons"></button>
+                        </div>
+                      </div>`
+        });
+
+        app.component("alert-window", {
+            props: ["header","question","name","id"],
+            template: `<div class="modalWindowsDelete">
+                        <div class="modalWindowHeaders">
+                            Удаление {{ header }}
+                            <button class="modalWindowsCloseButtons" @click="$emit('close_window')"></button>
+                        </div>
+                        <div class="modalWindowsQuestionTexts">
+                            Вы действительно хотите удалить {{ question }}:<br><b>{{ name }}</b>?
+                        </div>
+                        <button class="deteteModalButtons" @click="$emit('finally_delete',{id: id, finally: true})">Удалить</button>
+                        <button class="cancelModalButtons" @click="$emit('close_window')">Отмена</button>
+                      </div>`
+        });
+
+        app.component("edit-record-window", {
+            props: ['action_type', 'book', 'type_header','type_button','header','text'],
+            template: `<div id="modalWindowCreateRecord">
+                        <div class="modalWindowHeaders">
+                            {{ book }}/{{ type_header }}
+                            <button class="modalWindowsCloseButtons" @click="$emit('close_window')"></button>
+                        </div>
+                        <div class="formBlocks">
+                            <label>Заголовок записи:</label>
+                            <input id="editRecordInput" :value="header" placeholder="Напишите здесь заголовок" @input="$emit('input_header',$event.target.value)">
+                        </div>
+                        <div class="formBlocks">
+                            <label>Содержание записи:</label>
+                            <textarea id="editRecordTextarea" :value="text" wrap="soft" @input="$emit('input_text',$event.target.value)"></textarea>
+                        </div>
+                        <div class="formBlocks">
+                            <button class="editModalButtons" @click="$emit('edit_record', {actionType: action_type, finally: true})">{{ type_button }}</button>
+                        </div>
+                      </div>`
+        });
+
+        app.component("empty-block", {
+            props: ['button_name'],
+            template: `<div class="emptyContentBlocks">
+                         <p><slot></slot></p>
+                         <button class="emoptyContentBlocksButtons" @click="$emit('create_record')">{{ button_name }}</button>
+                       </div>`
+        });
+
+        const vm = app.mount("#app");
+    </script>
+</html>

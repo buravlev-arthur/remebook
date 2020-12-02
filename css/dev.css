@@ -1,0 +1,408 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap");
+#app .formBlocks .editModalButtons, #app .cancelModalButtons, #app .deteteModalButtons, #app .modalWindowsCloseButtons, #app #contextMenuForMenuItems button, #app #contentBlock #bookItemsBlock .items .item_shadow_blocks .item_full_content_buttons, #app #contentBlock .emptyContentBlocks button, #app #addNewRecordButton, #app #leftMenu #addNewBookButton, #app #topBlock #clearSearchButton, #app #topBlock #searchButton {
+  outline: none;
+  border: 0px;
+  cursor: pointer;
+}
+
+html,
+body {
+  background: #ffffff;
+  color: #222222;
+  font-family: "Open Sans", sans-serif;
+  padding: 0px;
+  margin: 0px;
+  height: 100%;
+}
+
+#app {
+  width: 748px;
+  min-height: 100%;
+  margin: 0px auto;
+  overflow: hidden;
+  position: relative;
+}
+#app #topBlock {
+  width: 748px;
+  height: 104px;
+  position: fixed;
+  background: #ffffff;
+  top: 0px;
+  left: 50%;
+  margin-left: -375px;
+  z-index: 2;
+}
+#app #topBlock #logo {
+  display: block;
+  width: 143px;
+  height: 48px;
+  margin-top: 21px;
+}
+#app #topBlock #searchBlock {
+  width: 380px;
+  height: 30px;
+  position: absolute;
+  right: 0px;
+  top: 50%;
+  margin-top: -15px;
+}
+#app #topBlock #searchInput {
+  width: calc(100% - 28px);
+  height: 100%;
+  border: 1px solid #c5c5c5;
+  border-radius: 2px;
+  outline: none;
+  transition: 0.2s;
+  color: #444;
+  padding: 0px 14px;
+}
+#app #topBlock #searchInput:hover {
+  border-color: #aaaaaa;
+  color: #222222;
+}
+#app #topBlock #searchInput:focus {
+  border-color: #888888;
+  color: #000000;
+}
+#app #topBlock #searchButton {
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  width: 20px;
+  transition: 0.2s;
+  opacity: 0.8;
+  height: 21px;
+  background: url("../imgs/search_button.svg");
+}
+#app #topBlock #searchButton:hover {
+  opacity: 1;
+}
+#app #topBlock #clearSearchButton {
+  position: absolute;
+  width: 11px;
+  height: 13px;
+  top: 10px;
+  right: 10px;
+  transition: 0.2s;
+  opacity: 0.8;
+  background: url("../imgs/clear_search.svg");
+}
+#app #topBlock #clearSearchButton:hover {
+  opacity: 1;
+}
+#app #leftMenu {
+  width: 160px;
+  float: left;
+  position: fixed;
+  left: 50%;
+  top: 104px;
+  margin-left: -370px;
+}
+#app #leftMenu #addNewBookButton {
+  width: 100px;
+  height: 13px;
+  margin-left: 20px;
+  margin-top: 10px;
+}
+#app #leftMenu #addNewBookButton #anbb_icon {
+  width: 13px;
+  height: 13px;
+  float: left;
+  margin-right: 8px;
+  background: url("../imgs/add_new_record.svg");
+  background-size: contain;
+}
+#app #leftMenu #addNewBookButton span {
+  display: block;
+  float: left;
+  line-height: 12px;
+  color: #bbbbbb;
+  font-size: 10px;
+}
+#app #leftMenu input#newBookInput {
+  margin-left: 20px;
+  outline: none;
+  width: 120px;
+  border: 1px solid #222222;
+  border-radius: 2px;
+}
+#app #leftMenu .menuItems {
+  width: 160px;
+  height: 25px;
+  line-height: 25px;
+  padding-left: 20px;
+  font-size: 14px;
+  box-sizing: border-box;
+  cursor: pointer;
+  margin-bottom: 4px;
+  position: relative;
+}
+#app #leftMenu .menuItems #activeMenuItemsDot {
+  float: left;
+  width: 8px;
+  height: 8px;
+  background: #222222;
+  border-radius: 9px;
+  margin-top: 9px;
+  margin-right: 12px;
+}
+#app #leftMenu .menuItems.active {
+  padding-left: 0px;
+  font-weight: bold;
+}
+#app #leftMenu .editMenuItemInputs {
+  margin-left: 20px;
+  width: 120px;
+  margin-top: 2px;
+  height: 20px;
+  padding: 0px 6px;
+  margin-bottom: 2px;
+  outline: none;
+}
+#app #newRecordTopBlock {
+  position: fixed;
+  overflow: hidden;
+  width: 550px;
+  left: 50%;
+  margin-left: -176px;
+  margin-bottom: 20px;
+  background: #ffffff;
+  top: 106px;
+  z-index: 2;
+}
+#app #addNewRecordButton {
+  width: 22px;
+  height: 22px;
+  background: url("../imgs/add_new_record.svg");
+  float: right;
+  opacity: 0.9;
+}
+#app #addNewRecordButton:hover {
+  opacity: 1;
+}
+#app #contentBlock {
+  width: 550px;
+  min-height: 100%;
+  float: right;
+  margin-top: 108px;
+}
+#app #contentBlock .emptyContentBlocks {
+  margin-top: 40px;
+}
+#app #contentBlock .emptyContentBlocks p {
+  text-align: center;
+  font-size: 14px;
+  color: #444444;
+}
+#app #contentBlock .emptyContentBlocks button {
+  background: #444444;
+  width: 140px;
+  display: block;
+  height: 30px;
+  color: #eeeeee;
+  margin: 20px auto;
+  border-radius: 2px;
+}
+#app #contentBlock #bookItemsBlock {
+  margin-top: 30px;
+}
+#app #contentBlock #bookItemsBlock .items {
+  position: relative;
+  height: 76px;
+  min-height: 76px;
+  overflow: hidden;
+  background: #fafafa;
+  font-size: 12px;
+  border-radius: 2px;
+  margin-bottom: 20px;
+  transition-duration: 0.3s;
+  color: #222222;
+  clear: both;
+  cursor: pointer;
+}
+#app #contentBlock #bookItemsBlock .items .item_headers {
+  margin: 10px 15px 0px;
+  font-weight: bold;
+}
+#app #contentBlock #bookItemsBlock .items .item_contents {
+  margin: 0px 15px 10px;
+  line-height: 13px;
+  white-space: pre-wrap;
+}
+#app #contentBlock #bookItemsBlock .items .item_shadow_blocks {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  height: 52px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #fafafa 90%);
+}
+#app #contentBlock #bookItemsBlock .items .item_shadow_blocks .item_full_content_buttons {
+  position: absolute;
+  left: 50%;
+  margin-left: -7px;
+  bottom: 4px;
+  width: 14px;
+  height: 7px;
+  background: url("../imgs/show_full_content.svg");
+}
+#app #contentBlock #bookItemsBlock .items:hover {
+  background: #f7f7f7;
+}
+#app #contextMenuForMenuItems {
+  width: 130px;
+  height: 70px;
+  background: #222222;
+  overflow: hidden;
+  position: fixed;
+  z-index: 999;
+  border-radius: 2px;
+}
+#app #contextMenuForMenuItems button {
+  width: 100%;
+  color: #dddddd;
+  text-align: center;
+  height: 34px;
+  line-height: 34px;
+  font-size: 14px;
+  background: none;
+}
+#app #contextMenuForMenuItems button:hover {
+  color: #ffffff;
+}
+#app #contextMenuForMenuItems button:first-child {
+  border-bottom: 1px solid #555;
+}
+#app .modalWindowsDelete {
+  position: fixed;
+  z-index: 9999;
+  width: 280px;
+  height: 160px;
+  background: #ffffff;
+  box-shadow: 0px 2px 4px 1px #eeeeee;
+  border-radius: 2px;
+  top: 50%;
+  margin-top: -80px;
+  left: 50%;
+  margin-left: -140px;
+}
+#app .modalWindowHeaders {
+  height: 26px;
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 26px;
+  margin-top: 6px;
+  position: relative;
+}
+#app .modalWindowsCloseButtons {
+  width: 16px;
+  height: 16px;
+  background: url("../imgs/close_modal_window_button.svg");
+  background-size: contain;
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  opacity: 0.8;
+}
+#app .modalWindowsCloseButtons:hover {
+  opacity: 1;
+}
+#app .modalWindowsQuestionTexts {
+  font-size: 12px;
+  text-align: center;
+  margin-top: 20px;
+}
+#app .deteteModalButtons {
+  background: #999999;
+  color: #ffffff;
+  width: 110px;
+  height: 30px;
+  float: left;
+  margin-left: 20px;
+  margin-top: 20px;
+  border-radius: 2px;
+}
+#app .deteteModalButtons:hover {
+  background: #888888;
+}
+#app .cancelModalButtons {
+  background: #333333;
+  color: #ffffff;
+  width: 110px;
+  height: 30px;
+  float: left;
+  margin-left: 20px;
+  margin-top: 20px;
+  border-radius: 2px;
+}
+#app .cancelModalButtons:hover {
+  background: #222222;
+}
+#app #modalWindowCreateRecord {
+  width: 380px;
+  height: 420px;
+  background: #ffffff;
+  border-radius: 2px;
+  position: fixed;
+  z-index: 9999;
+  top: 50%;
+  left: 50%;
+  margin-top: -210px;
+  margin-left: -190px;
+  box-shadow: 0px 2px 4px 1px #eee;
+}
+#app .formBlocks {
+  margin: 20px 40px;
+  width: calc(100% - 80px);
+}
+#app .formBlocks label {
+  font-size: 12px;
+  color: #444444;
+  display: block;
+  font-weight: 100;
+}
+#app .formBlocks input {
+  height: 30px;
+  border: 1px solid #666666;
+  border-radius: 2px;
+  padding: 0px 12px;
+  color: #666;
+  font-size: 14px;
+  outline: none;
+  width: calc(100% - 24px);
+}
+#app .formBlocks input:focus {
+  color: #222222;
+  border-color: #444444;
+}
+#app .formBlocks textarea {
+  width: calc(100% - 24px);
+  height: calc(200px - 24px);
+  outline: none;
+  border-radius: 2px;
+  padding: 12px;
+  font-size: 14px;
+  border: 1px solid #666666;
+  color: #666;
+}
+#app .formBlocks textarea:focus {
+  color: #222222;
+  border-color: #444444;
+}
+#app .formBlocks .editModalButtons {
+  width: 170px;
+  height: 30px;
+  background: #333333;
+  color: #eeeeee;
+  border-radius: 2px;
+  display: block;
+  margin: 0px auto;
+}
+#app .formBlocks .editModalButtons:hover {
+  color: #ffffff;
+  background: #222222;
+}
+
+/*# sourceMappingURL=dev.css.map */
