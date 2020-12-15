@@ -1,3 +1,4 @@
+@import smartphone
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap')
 
 $bgDefault: #ffffff
@@ -31,6 +32,8 @@ body
     margin: 0px auto
     overflow: hidden
     position: relative
+    @media screen and (max-width: 747px)
+        width: 100%
 
     #topBlock
         width: 748px
@@ -41,12 +44,23 @@ body
         left: 50%
         margin-left: -375px
         z-index: 2
+        @media screen and (max-width: 747px)
+            width: 100%
+            position: fixed
+            top: 0px
+            left: 0px
+            margin-left: auto
+            height: 48px
 
         #logo
             display: block
             width: 143px
             height: 48px
             margin-top: 21px
+            @media screen and (max-width: 747px)
+                margin-top: 0px
+                margin-left: calc(50% - 121px)
+                float: left
 
         #searchBlock
             width: 380px
@@ -55,6 +69,13 @@ body
             right: 0px
             top: 50%
             margin-top: -15px
+            @media screen and (max-width: 747px)
+                background: $bgDefault
+                top: 0px
+                left: 0px
+                width: 100%
+                height: 100%
+                margin-top: 0px
         
         #searchInput
             width: calc(100% - 28px)
@@ -65,6 +86,10 @@ body
             transition: .2s
             color: #444
             padding: 0px 14px
+            @media screen and (max-width: 747px)
+                width: calc(100% - 68px)
+                margin: 8px 20px
+                height: 30px
         
         #searchInput:hover
             border-color: #aaaaaa
@@ -83,7 +108,10 @@ body
             transition: .2s
             opacity: 0.8
             height: 21px
-            background: url('../imgs/search_button.svg')
+            background: url('../imgs/search_button.svg') no-repeat
+            @media screen and (max-width: 747px)
+                width: 40px
+                top: 13px
 
         #searchButton:hover
             opacity: 1
@@ -97,7 +125,10 @@ body
             right: 10px
             transition: .2s
             opacity: 0.8
-            background: url('../imgs/clear_search.svg')
+            background: url('../imgs/clear_search.svg') no-repeat
+            @media screen and (max-width: 747px)
+                right: 28px
+                top: 17px
 
         #clearSearchButton:hover
             opacity: 1.0
@@ -111,6 +142,17 @@ body
         left: 50%
         top: 104px
         margin-left: -370px
+        @media screen and (max-width: 747px)
+            position: fixed
+            height: 100%
+            top: 0px
+            left: 0px
+            background: $primaryColor
+            width: 170px
+            z-index: 99
+            float: none
+            margin-left: 0px
+            padding-left: 20px
 
         #addNewBookButton
             @extend %button-default-styles
@@ -151,6 +193,9 @@ body
             cursor: pointer
             margin-bottom: 4px
             position: relative
+            @media screen and (max-width: 747px)
+                color: $bgDefault
+                margin-bottom: 14px
 
             #activeMenuItemsDot
                 float: left
@@ -160,6 +205,8 @@ body
                 border-radius: 9px
                 margin-top: 9px
                 margin-right: 12px
+                @media screen and (max-width: 747px)
+                    background: $bgDefault
 
         .menuItems.active
             padding-left: 0px
@@ -184,6 +231,14 @@ body
         background: $bgDefault
         top: 106px
         z-index:2
+        @media screen and (max-width: 747px)
+            width: calc(100% - 40px)
+            top: auto
+            bottom: 0px
+            margin-bottom: 0px
+            height: 50px
+            margin-left: 0px
+            left: 20px
     
     #addNewRecordButton
         @extend %button-default-styles
@@ -192,6 +247,8 @@ body
         background: url('../imgs/add_new_record.svg')
         float: right
         opacity: 0.9
+        @media screen and (max-width: 747px)
+            margin-top: 14px
     
     #addNewRecordButton:hover
         opacity: 1
@@ -201,6 +258,10 @@ body
         min-height: 100%
         float: right
         margin-top: 108px
+        @media screen and (max-width: 747px)
+            float: none
+            width: calc(100% - 40px)
+            margin: 80px 20px 20px
 
         .emptyContentBlocks
             margin-top: 40px
@@ -222,6 +283,8 @@ body
         
         #bookItemsBlock
             margin-top: $stPadding + 10
+            @media screen and (max-width: 747px)
+                padding-bottom: 40px
 
             .items
                 position: relative
@@ -275,6 +338,11 @@ body
         position: fixed
         z-index: 999
         border-radius: $borderRadius
+        @media screen and (max-width: 747px)
+            width: calc(100% - 40px)
+            background: $bgGrey
+            border: 1px solid $greyFont
+            height: 100px
 
         button
             @extend %button-default-styles
@@ -285,12 +353,19 @@ body
             line-height: 34px
             font-size: $primaryFontSize
             background: none
+            @media screen and (max-width: 747px)
+                color: $primaryColor
+                height: 49px
     
         button:hover
             color: $bgDefault
+            @media screen and (max-width: 747px)
+                color: $primaryColor
     
         button:first-child
             border-bottom: 1px solid #555
+            @media screen and (max-width: 747px)
+                border-bottom: 1px solid #eeeeee
     
     .modalWindowsDelete
         position: fixed
@@ -311,9 +386,14 @@ body
         text-align: center
         font-weight: bold
         font-size: 14px
+        overflow: hidden
         line-height: 26px
         margin-top: 6px
         position: relative
+        @media screen and (max-width: 747px)
+            font-size: 12px
+            width: calc(100% - 26px)
+            padding-right: 26px
 
     .modalWindowsCloseButtons
         @extend %button-default-styles
@@ -374,6 +454,14 @@ body
         margin-top: -210px
         margin-left: -190px
         box-shadow: 0px 2px 4px 1px #eee
+        @media screen and (max-width: 747px)
+            width: 100%
+            left: 0px
+            margin-left: auto
+            box-shadow: none
+            height: 100%
+            top: 0px
+            margin-top: 0px
 
     .formBlocks
         margin: 20px 40px
@@ -408,6 +496,8 @@ body
             font-size: $primaryFontSize
             border: 1px solid #666666
             color: #666
+            @media screen and (max-width: 747px)
+                height: 300px
         
         textarea:focus
             color: $primaryColor

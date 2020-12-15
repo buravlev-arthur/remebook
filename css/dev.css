@@ -1,5 +1,34 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap");
-#app .formBlocks .editModalButtons, #app .cancelModalButtons, #app .deteteModalButtons, #app .modalWindowsCloseButtons, #app #contextMenuForMenuItems button, #app #contentBlock #bookItemsBlock .items .item_shadow_blocks .item_full_content_buttons, #app #contentBlock .emptyContentBlocks button, #app #addNewRecordButton, #app #leftMenu #addNewBookButton, #app #topBlock #clearSearchButton, #app #topBlock #searchButton {
+#openSearchBlockButton {
+  width: 30px;
+  height: 30px;
+  float: right;
+  margin-top: 10px;
+  margin-right: 20px;
+  background: url("../imgs/search_button.svg") no-repeat;
+  background-size: contain;
+}
+
+#openMenuBlockButton {
+  width: 30px;
+  height: 30px;
+  float: left;
+  margin-top: 13px;
+  margin-left: 20px;
+  background: url("../imgs/menu_button_grey.svg") no-repeat;
+  background-size: contain;
+}
+
+#closeMenuButton {
+  width: 30px;
+  height: 30px;
+  margin-top: 13px;
+  margin-bottom: 10px;
+  background: url("../imgs/menu_button_white.svg") no-repeat;
+  background-size: contain;
+}
+
+#app .formBlocks .editModalButtons, #app .cancelModalButtons, #app .deteteModalButtons, #app .modalWindowsCloseButtons, #app #contextMenuForMenuItems button, #app #contentBlock #bookItemsBlock .items .item_shadow_blocks .item_full_content_buttons, #app #contentBlock .emptyContentBlocks button, #app #addNewRecordButton, #app #leftMenu #addNewBookButton, #app #topBlock #clearSearchButton, #app #topBlock #searchButton, #openSearchBlockButton, #openMenuBlockButton, #closeMenuButton {
   outline: none;
   border: 0px;
   cursor: pointer;
@@ -22,6 +51,11 @@ body {
   overflow: hidden;
   position: relative;
 }
+@media screen and (max-width: 747px) {
+  #app {
+    width: 100%;
+  }
+}
 #app #topBlock {
   width: 748px;
   height: 104px;
@@ -32,11 +66,28 @@ body {
   margin-left: -375px;
   z-index: 2;
 }
+@media screen and (max-width: 747px) {
+  #app #topBlock {
+    width: 100%;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    margin-left: auto;
+    height: 48px;
+  }
+}
 #app #topBlock #logo {
   display: block;
   width: 143px;
   height: 48px;
   margin-top: 21px;
+}
+@media screen and (max-width: 747px) {
+  #app #topBlock #logo {
+    margin-top: 0px;
+    margin-left: calc(50% - 121px);
+    float: left;
+  }
 }
 #app #topBlock #searchBlock {
   width: 380px;
@@ -45,6 +96,16 @@ body {
   right: 0px;
   top: 50%;
   margin-top: -15px;
+}
+@media screen and (max-width: 747px) {
+  #app #topBlock #searchBlock {
+    background: #ffffff;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    margin-top: 0px;
+  }
 }
 #app #topBlock #searchInput {
   width: calc(100% - 28px);
@@ -55,6 +116,13 @@ body {
   transition: 0.2s;
   color: #444;
   padding: 0px 14px;
+}
+@media screen and (max-width: 747px) {
+  #app #topBlock #searchInput {
+    width: calc(100% - 68px);
+    margin: 8px 20px;
+    height: 30px;
+  }
 }
 #app #topBlock #searchInput:hover {
   border-color: #aaaaaa;
@@ -72,7 +140,13 @@ body {
   transition: 0.2s;
   opacity: 0.8;
   height: 21px;
-  background: url("../imgs/search_button.svg");
+  background: url("../imgs/search_button.svg") no-repeat;
+}
+@media screen and (max-width: 747px) {
+  #app #topBlock #searchButton {
+    width: 40px;
+    top: 13px;
+  }
 }
 #app #topBlock #searchButton:hover {
   opacity: 1;
@@ -85,7 +159,13 @@ body {
   right: 10px;
   transition: 0.2s;
   opacity: 0.8;
-  background: url("../imgs/clear_search.svg");
+  background: url("../imgs/clear_search.svg") no-repeat;
+}
+@media screen and (max-width: 747px) {
+  #app #topBlock #clearSearchButton {
+    right: 28px;
+    top: 17px;
+  }
 }
 #app #topBlock #clearSearchButton:hover {
   opacity: 1;
@@ -97,6 +177,20 @@ body {
   left: 50%;
   top: 104px;
   margin-left: -370px;
+}
+@media screen and (max-width: 747px) {
+  #app #leftMenu {
+    position: fixed;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    background: #222222;
+    width: 170px;
+    z-index: 99;
+    float: none;
+    margin-left: 0px;
+    padding-left: 20px;
+  }
 }
 #app #leftMenu #addNewBookButton {
   width: 100px;
@@ -137,6 +231,12 @@ body {
   margin-bottom: 4px;
   position: relative;
 }
+@media screen and (max-width: 747px) {
+  #app #leftMenu .menuItems {
+    color: #ffffff;
+    margin-bottom: 14px;
+  }
+}
 #app #leftMenu .menuItems #activeMenuItemsDot {
   float: left;
   width: 8px;
@@ -145,6 +245,11 @@ body {
   border-radius: 9px;
   margin-top: 9px;
   margin-right: 12px;
+}
+@media screen and (max-width: 747px) {
+  #app #leftMenu .menuItems #activeMenuItemsDot {
+    background: #ffffff;
+  }
 }
 #app #leftMenu .menuItems.active {
   padding-left: 0px;
@@ -170,12 +275,28 @@ body {
   top: 106px;
   z-index: 2;
 }
+@media screen and (max-width: 747px) {
+  #app #newRecordTopBlock {
+    width: calc(100% - 40px);
+    top: auto;
+    bottom: 0px;
+    margin-bottom: 0px;
+    height: 50px;
+    margin-left: 0px;
+    left: 20px;
+  }
+}
 #app #addNewRecordButton {
   width: 22px;
   height: 22px;
   background: url("../imgs/add_new_record.svg");
   float: right;
   opacity: 0.9;
+}
+@media screen and (max-width: 747px) {
+  #app #addNewRecordButton {
+    margin-top: 14px;
+  }
 }
 #app #addNewRecordButton:hover {
   opacity: 1;
@@ -185,6 +306,13 @@ body {
   min-height: 100%;
   float: right;
   margin-top: 108px;
+}
+@media screen and (max-width: 747px) {
+  #app #contentBlock {
+    float: none;
+    width: calc(100% - 40px);
+    margin: 80px 20px 20px;
+  }
 }
 #app #contentBlock .emptyContentBlocks {
   margin-top: 40px;
@@ -205,6 +333,11 @@ body {
 }
 #app #contentBlock #bookItemsBlock {
   margin-top: 30px;
+}
+@media screen and (max-width: 747px) {
+  #app #contentBlock #bookItemsBlock {
+    padding-bottom: 40px;
+  }
 }
 #app #contentBlock #bookItemsBlock .items {
   position: relative;
@@ -258,6 +391,14 @@ body {
   z-index: 999;
   border-radius: 2px;
 }
+@media screen and (max-width: 747px) {
+  #app #contextMenuForMenuItems {
+    width: calc(100% - 40px);
+    background: #fafafa;
+    border: 1px solid #bbbbbb;
+    height: 100px;
+  }
+}
 #app #contextMenuForMenuItems button {
   width: 100%;
   color: #dddddd;
@@ -267,11 +408,27 @@ body {
   font-size: 14px;
   background: none;
 }
+@media screen and (max-width: 747px) {
+  #app #contextMenuForMenuItems button {
+    color: #222222;
+    height: 49px;
+  }
+}
 #app #contextMenuForMenuItems button:hover {
   color: #ffffff;
 }
+@media screen and (max-width: 747px) {
+  #app #contextMenuForMenuItems button:hover {
+    color: #222222;
+  }
+}
 #app #contextMenuForMenuItems button:first-child {
   border-bottom: 1px solid #555;
+}
+@media screen and (max-width: 747px) {
+  #app #contextMenuForMenuItems button:first-child {
+    border-bottom: 1px solid #eeeeee;
+  }
 }
 #app .modalWindowsDelete {
   position: fixed;
@@ -292,9 +449,17 @@ body {
   text-align: center;
   font-weight: bold;
   font-size: 14px;
+  overflow: hidden;
   line-height: 26px;
   margin-top: 6px;
   position: relative;
+}
+@media screen and (max-width: 747px) {
+  #app .modalWindowHeaders {
+    font-size: 12px;
+    width: calc(100% - 26px);
+    padding-right: 26px;
+  }
 }
 #app .modalWindowsCloseButtons {
   width: 16px;
@@ -353,6 +518,17 @@ body {
   margin-left: -190px;
   box-shadow: 0px 2px 4px 1px #eee;
 }
+@media screen and (max-width: 747px) {
+  #app #modalWindowCreateRecord {
+    width: 100%;
+    left: 0px;
+    margin-left: auto;
+    box-shadow: none;
+    height: 100%;
+    top: 0px;
+    margin-top: 0px;
+  }
+}
 #app .formBlocks {
   margin: 20px 40px;
   width: calc(100% - 80px);
@@ -386,6 +562,11 @@ body {
   font-size: 14px;
   border: 1px solid #666666;
   color: #666;
+}
+@media screen and (max-width: 747px) {
+  #app .formBlocks textarea {
+    height: 300px;
+  }
 }
 #app .formBlocks textarea:focus {
   color: #222222;
