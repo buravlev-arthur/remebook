@@ -361,7 +361,7 @@
                             this.contextMenu2 = {
                                 show: true,
                                 x: "20px",
-                                y: (event.touches[0].clientY+30) + "px",
+                                y: (event.touches[0].clientY-12) + "px",
                                 id: id,
                                 name: recordName
                             };
@@ -553,9 +553,21 @@
                     else {
                         id = id.slice(id.indexOf("_") + 1, id.length);
                     }
-                    if (parseInt(event.touches.length) === 2) {
-                        this.showContextMenuForRecordItem(event,id);
+
+                    if (this.smartphone.touchTime !== 0) {
+                        let touchInterval = parseInt(event.timeStamp) - this.smartphone.touchTime; 
+                        if (touchInterval < 260) {
+                            setTimeout(vm.showContextMenuForRecordItem, 150, event, id);
+                        }
+                        this.smartphone.touchTime = 0;
                     }
+                    else {
+                        this.smartphone.touchTime = parseInt(event.timeStamp);
+                        setTimeout("vm.smartphone.touchTime = 0", 270);
+                    }
+                    /*if (parseInt(event.touches.length) === 2) {
+                        this.showContextMenuForRecordItem(event,id);
+                    }*/
                 }
             }
         };

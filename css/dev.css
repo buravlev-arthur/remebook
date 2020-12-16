@@ -60,6 +60,9 @@ body {
     width: 100%;
   }
 }
+#app input {
+  -webkit-appearance: none !important;
+}
 #app #topBlock {
   width: 748px;
   height: 104px;
