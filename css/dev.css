@@ -60,7 +60,7 @@ body {
     width: 100%;
   }
 }
-#app input {
+#app input, #app textarea, #app button {
   -webkit-appearance: none !important;
 }
 #app #topBlock {
