@@ -382,7 +382,7 @@ body {
   bottom: 4px;
   width: 14px;
   height: 7px;
-  background: url("../imgs/show_full_content.svg");
+  background: url("../imgs/show_full_content.svg") no-repeat;
 }
 #app #contentBlock #bookItemsBlock .items:hover {
   background: #f7f7f7;
