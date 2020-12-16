@@ -262,6 +262,7 @@ body
             float: none
             width: calc(100% - 40px)
             margin: 80px 20px 20px
+            min-height: 410px
 
         .emptyContentBlocks
             margin-top: 40px
@@ -399,7 +400,7 @@ body
         @extend %button-default-styles
         width: 16px
         height: 16px
-        background: url('../imgs/close_modal_window_button.svg')
+        background: url('../imgs/close_modal_window_button.svg') no-repeat
         background-size: contain
         position: absolute
         top: 5px
@@ -455,12 +456,11 @@ body
         margin-left: -190px
         box-shadow: 0px 2px 4px 1px #eee
         @media screen and (max-width: 747px)
-            width: 100%
-            left: 0px
+            width: calc(100% - 40px)
+            left: 20px
             margin-left: auto
-            box-shadow: none
-            height: 100%
-            top: 0px
+            height: 80%
+            top: 10%
             margin-top: 0px
 
     .formBlocks
@@ -497,7 +497,7 @@ body
             border: 1px solid #666666
             color: #666
             @media screen and (max-width: 747px)
-                height: 300px
+                height: calc(100% - 43px)
         
         textarea:focus
             color: $primaryColor

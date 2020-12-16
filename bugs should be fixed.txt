@@ -1,0 +1,4 @@
++ 1. To disable autoscaling 
++ 2. To disable background repeating for arrow-buttons
++ 3. To change height of create/edit record popup window
+4. To repear scrolling of content block

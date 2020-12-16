@@ -28,6 +28,10 @@
   background-size: contain;
 }
 
+#editRecordTextareaBlock {
+  height: calc(100% - 200px);
+}
+
 #app .formBlocks .editModalButtons, #app .cancelModalButtons, #app .deteteModalButtons, #app .modalWindowsCloseButtons, #app #contextMenuForMenuItems button, #app #contentBlock #bookItemsBlock .items .item_shadow_blocks .item_full_content_buttons, #app #contentBlock .emptyContentBlocks button, #app #addNewRecordButton, #app #leftMenu #addNewBookButton, #app #topBlock #clearSearchButton, #app #topBlock #searchButton, #openSearchBlockButton, #openMenuBlockButton, #closeMenuButton {
   outline: none;
   border: 0px;
@@ -312,6 +316,7 @@ body {
     float: none;
     width: calc(100% - 40px);
     margin: 80px 20px 20px;
+    min-height: 410px;
   }
 }
 #app #contentBlock .emptyContentBlocks {
@@ -464,7 +469,7 @@ body {
 #app .modalWindowsCloseButtons {
   width: 16px;
   height: 16px;
-  background: url("../imgs/close_modal_window_button.svg");
+  background: url("../imgs/close_modal_window_button.svg") no-repeat;
   background-size: contain;
   position: absolute;
   top: 5px;
@@ -520,12 +525,11 @@ body {
 }
 @media screen and (max-width: 747px) {
   #app #modalWindowCreateRecord {
-    width: 100%;
-    left: 0px;
+    width: calc(100% - 40px);
+    left: 20px;
     margin-left: auto;
-    box-shadow: none;
-    height: 100%;
-    top: 0px;
+    height: 80%;
+    top: 10%;
     margin-top: 0px;
   }
 }
@@ -565,7 +569,7 @@ body {
 }
 @media screen and (max-width: 747px) {
   #app .formBlocks textarea {
-    height: 300px;
+    height: calc(100% - 43px);
   }
 }
 #app .formBlocks textarea:focus {
